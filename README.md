@@ -371,7 +371,7 @@ echo <password> | base64 --decode
 - Click Create
 - Verify ArgoCD is able to sync successfully
 
-![alt text](image.png)
+![alt text](images/image.png)
 
 Test the CI/CD pipeline by modifying files in the go-web-app/static directory.
 Upon pushing changes to the repository, GitHub Actions and ArgoCD will automatically propagate the updates.

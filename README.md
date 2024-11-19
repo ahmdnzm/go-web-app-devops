@@ -20,12 +20,17 @@ This is a continuation of work from the [go-web-app](https://github.com/ahmdnzm/
 ```mermaid
 graph LR
     dev[Developer] -->|Code Push| github[GitHub]
-    github -->|Trigger| actions[GitHub Actions]
     
-    subgraph "Deployment Process"
-        actions -->|Build & Test| argocd[Argo CD]
-        helm[Helm Charts] -->|K8s Templates| argocd
+    subgraph "CI Process"
+        github -->|Trigger| actions[GitHub Actions]
+        actions -->|Build Image| docker[Dockerfile]
+        docker -->|Push| dockerhub[(DockerHub)]
+    end
+    
+    subgraph "CD Process"
+        helm[Helm Charts] -->|K8s Templates| argocd[Argo CD]
         github -->|Config Changes| helm
+        dockerhub -->|Pull Image| argocd
     end
     
     argocd -->|Deploy| eks[AWS EKS]
@@ -33,6 +38,8 @@ graph LR
     style dev fill:#85C1E9
     style github fill:#98FB98
     style actions fill:#FFA07A
+    style docker fill:#0DB7ED
+    style dockerhub fill:#0DB7ED
     style argocd fill:#DDA0DD
     style eks fill:#F0E68C
     style helm fill:#FFB6C1

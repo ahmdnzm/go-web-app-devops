@@ -21,7 +21,13 @@ This is a continuation of work from the [go-web-app](https://github.com/ahmdnzm/
 graph LR
     dev[Developer] -->|Code Push| github[GitHub]
     github -->|Trigger| actions[GitHub Actions]
-    actions -->|Build & Test| argocd[Argo CD]
+    
+    subgraph "Deployment Process"
+        actions -->|Build & Test| argocd[Argo CD]
+        helm[Helm Charts] -->|K8s Templates| argocd
+        github -->|Config Changes| helm
+    end
+    
     argocd -->|Deploy| eks[AWS EKS]
 
     style dev fill:#85C1E9
@@ -29,6 +35,7 @@ graph LR
     style actions fill:#FFA07A
     style argocd fill:#DDA0DD
     style eks fill:#F0E68C
+    style helm fill:#FFB6C1
 ```
 
 # Create CI/CD pipeline

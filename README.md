@@ -278,6 +278,71 @@ CD
 - Create `.github/workflows` directory
 - Create `cicd.yaml`
 
+<details>
+  <summary>cicd.yaml details</summary>
+  
+This GitHub Actions workflow automates the CI/CD pipeline for a Golang-based web application. Here's what it does, step by step:
+
+---
+
+### **Trigger**
+- The workflow runs whenever changes are pushed to the `main` branch, except for updates to certain files like `README.md`.
+
+---
+
+### **Jobs Overview**
+1. **Build**  
+   - Uses `ubuntu-latest` as the runner.
+   - Steps:
+     - Checks out the repository.
+     - Sets up Go version 1.22 for the build environment.
+     - Builds the application binary (`go-web-app`).
+     - Runs unit tests using `go test`.
+
+---
+
+2. **Code Quality**  
+   - Uses `ubuntu-latest` as the runner.
+   - Steps:
+     - Checks out the repository.
+     - Sets up Go version 1.22.
+     - Runs static code analysis with `golangci-lint` (version 1.56.2).
+
+---
+
+3. **Push**  
+   - Uses `ubuntu-latest` as the runner.
+   - Depends on the `build` job completing successfully.
+   - Steps:
+     - Checks out the repository.
+     - Sets up Docker Buildx for multi-platform builds.
+     - Logs in to DockerHub using credentials stored in GitHub Secrets.
+     - Builds a Docker image using the `Dockerfile` in the repository.
+     - Pushes the built Docker image to DockerHub with a tag based on the GitHub run ID.
+
+---
+
+4. **Update New Tag in Helm Chart**  
+   - Uses `ubuntu-latest` as the runner.
+   - Depends on the `push` job completing successfully.
+   - Steps:
+     - Checks out a separate repository (`ahmdnzm/go-web-app-devops`) that contains the Helm chart for the application.
+     - Updates the `tag` field in the Helm chart's `values.yaml` file with the new Docker image tag (GitHub run ID).
+     - Commits and pushes the updated `values.yaml` back to the `go-web-app-devops` repository.
+
+---
+
+### **Purpose and Benefits**
+- **Automated CI**: Ensures the application builds successfully and passes tests with every code change.
+- **Code Quality Checks**: Uses `golangci-lint` to enforce coding standards and detect potential issues.
+- **Automated Docker Image Creation**: Builds and pushes Docker images to DockerHub automatically.
+- **Dynamic Helm Chart Updates**: Keeps the Helm chart up-to-date with the latest Docker image tag, streamlining deployments.
+- **Integration with Kubernetes**: Prepares the app for deployment using Helm charts in Kubernetes clusters. 
+
+This workflow enables a seamless, end-to-end CI/CD process with minimal manual intervention.
+</details>
+
+
 ## Configure Github Action secret
 
 - In the `go-web-app` repository, click on the **Settings** tab located in the top menu bar.

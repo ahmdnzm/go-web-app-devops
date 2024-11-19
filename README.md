@@ -1,5 +1,36 @@
 This is a continuation of work from the [go-web-app](https://github.com/ahmdnzm/go-web-app) repository.
 
+# Go Web App DevOps
+
+- Implementing DevOps for a Golang-based web application deployed on an EKS cluster.  
+- Using **GitHub Actions** for Continuous Integration (CI) to automate build and test processes.  
+- Using **Argo CD** for Continuous Deployment (CD) to automate application updates in Kubernetes.  
+- Managing Kubernetes resources like deployments, services, and ingress using **Helm charts**.  
+- Handling load balancing with an **Nginx ingress controller**.  
+- Ensuring a fully automated and efficient deployment workflow.  
+
+🛠️ **Tech Stack:**
+
+- **CI:** GitHub Actions
+- **CD:** Argo CD
+- **Containerization:** Docker
+- **Orchestration:** Kubernetes (EKS)
+- **Configuration Management:** Helm
+
+```mermaid
+graph LR
+    dev[Developer] -->|Code Push| github[GitHub]
+    github -->|Trigger| actions[GitHub Actions]
+    actions -->|Build & Test| argocd[Argo CD]
+    argocd -->|Deploy| eks[AWS EKS]
+
+    style dev fill:#85C1E9
+    style github fill:#98FB98
+    style actions fill:#FFA07A
+    style argocd fill:#DDA0DD
+    style eks fill:#F0E68C
+```
+
 # Create CI/CD pipeline
 
 ## Setup EKS Cluster
@@ -242,7 +273,7 @@ CD
 - ArgoCD will watch the helm chart.
 - Any changes in helm cart, it will pull and install in kubernetes cluster
 
-Configure Github Action in `go-web-app` repository
+## Configure Github Action in `go-web-app` repository
 
 - Create `.github/workflows` directory
 - Create `cicd.yaml`
